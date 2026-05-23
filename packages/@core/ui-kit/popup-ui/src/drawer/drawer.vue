@@ -90,17 +90,17 @@ const {
   zIndex,
 } = usePriorityValues(props, state);
 
-// watch(
-//   () => showLoading.value,
-//   (v) => {
-//     if (v && wrapperRef.value) {
-//       wrapperRef.value.scrollTo({
-//         // behavior: 'smooth',
-//         top: 0,
-//       });
-//     }
-//   },
-// );
+watch(
+  () => showLoading.value,
+  (v) => {
+    if (v && wrapperRef.value) {
+      wrapperRef.value.scrollTo({
+        // behavior: 'smooth',
+        top: 0,
+      });
+    }
+  },
+);
 
 /**
  * 在开启keepAlive情况下 直接通过浏览器按钮/手势等返回 不会关闭弹窗
