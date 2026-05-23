@@ -3,7 +3,7 @@ import type { RouteRecordRaw } from 'vue-router';
 const routes: RouteRecordRaw[] = [
   {
     meta: {
-      icon: 'mdi:home',
+      icon: 'mdi:cog',
       title: '系统设置',
     },
     name: 'settings',
@@ -13,9 +13,9 @@ const routes: RouteRecordRaw[] = [
       {
         name: 'SettingsIndex',
         path: '/settings/logs',
-        component: () => import('#/views/logs/index.vue'),
+        component: () => import('#/views/log/index.vue'),
         meta: {
-          icon: 'mdi:home',
+          icon: 'mdi:format-list-bulleted',
           title: '日志管理',
         },
       },
