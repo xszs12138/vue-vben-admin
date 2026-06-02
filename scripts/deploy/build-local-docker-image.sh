@@ -23,8 +23,11 @@ function install_dependencies() {
 }
 
 function build_image() {
-    # build docker
-    docker build ../../ -f Dockerfile -t ${IMAGE_NAME} || ERROR="build_image failed"
+    # build docker from monorepo root
+    docker build ../../ -f Dockerfile \
+        --build-arg VITE_GLOB_API_URL=/api \
+        --build-arg VITE_BASE=/admin/ \
+        -t ${IMAGE_NAME} || ERROR="build_image failed"
 }
 
 function log_message() {
