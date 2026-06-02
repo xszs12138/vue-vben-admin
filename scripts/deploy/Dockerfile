@@ -9,13 +9,15 @@ ENV CI=true
 ARG VITE_GLOB_API_URL=/api
 ARG VITE_BASE=/admin/
 
-RUN npm i -g corepack
+RUN corepack enable
 
 WORKDIR /app
 
 COPY . /app
 
-RUN --mount=type=cache,id=pnpm,target=/pnpm/store pnpm install --frozen-lockfile
+RUN --mount=type=cache,id=pnpm,target=/pnpm/store \
+  corepack prepare pnpm@11.2.2 --activate \
+  && pnpm install --frozen-lockfile
 
 RUN sed -i "s#VITE_GLOB_API_URL=.*#VITE_GLOB_API_URL=${VITE_GLOB_API_URL}#" apps/web-antdv-next/.env.production \
   && sed -i "s#VITE_BASE=.*#VITE_BASE=${VITE_BASE}#" apps/web-antdv-next/.env.production \
