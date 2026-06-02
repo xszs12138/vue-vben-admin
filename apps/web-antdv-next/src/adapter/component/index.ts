@@ -38,6 +38,7 @@ import type {
   BaseFormComponentType,
   IconPickerProps,
 } from '@vben/common-ui';
+import type { TipTapProps } from '@vben/plugins/tiptap';
 import type { Recordable } from '@vben/types';
 
 import {
@@ -59,9 +60,13 @@ import {
 } from '@vben/common-ui';
 import { IconifyIcon } from '@vben/icons';
 import { $t } from '@vben/locales';
+import { VbenTiptap } from '@vben/plugins/tiptap';
 import { isEmpty } from '@vben/utils';
 
 import { message, Modal, notification } from 'antdv-next';
+
+import { uploadImageUrl } from '#/api/image-bed';
+import ImageUpload from '#/components/ImageUpload.vue';
 
 type AdapterUploadProps = UploadProps & {
   aspectRatio?: string;
@@ -69,6 +74,12 @@ type AdapterUploadProps = UploadProps & {
   handleChange?: (event: UploadChangeParam) => void;
   maxSize?: number;
   onHandleChange?: (event: UploadChangeParam) => void;
+};
+
+export type ImageUploadProps = {
+  accept?: string;
+  disabled?: boolean;
+  maxSize?: number;
 };
 
 const AutoComplete = defineAsyncComponent(
@@ -539,6 +550,7 @@ export type ComponentType =
   | 'DefaultButton'
   | 'Divider'
   | 'IconPicker'
+  | 'ImageUpload'
   | 'Input'
   | 'InputNumber'
   | 'InputPassword'
@@ -548,6 +560,7 @@ export type ComponentType =
   | 'RadioGroup'
   | 'RangePicker'
   | 'Rate'
+  | 'RichEditor'
   | 'Select'
   | 'Space'
   | 'Switch'
@@ -572,6 +585,7 @@ export interface ComponentPropsMap {
   DefaultButton: ButtonProps;
   Divider: DividerProps;
   IconPicker: IconPickerProps;
+  ImageUpload: ImageUploadProps;
   Input: InputProps;
   InputNumber: InputNumberProps;
   InputPassword: InputProps;
@@ -581,6 +595,7 @@ export interface ComponentPropsMap {
   RadioGroup: RadioGroupProps;
   RangePicker: RangePickerProps;
   Rate: RateProps;
+  RichEditor: TipTapProps;
   Select: SelectProps;
   Space: SpaceProps;
   Switch: SwitchProps;
@@ -632,6 +647,7 @@ async function initComponentAdapter() {
       inputComponent: Input,
       modelValueProp: 'value',
     }),
+    ImageUpload,
     Input: withDefaultPlaceholder(Input, 'input'),
     InputNumber: withDefaultPlaceholder(InputNumber, 'input', {
       style: { width: '100%' },
@@ -646,6 +662,19 @@ async function initComponentAdapter() {
     RadioGroup,
     RangePicker,
     Rate,
+    RichEditor: withDefaultPlaceholder(VbenTiptap, 'input', {
+      imageUpload: {
+        accept: 'image/*',
+        maxSize: 5 * 1024 * 1024,
+        onUploadError: (error: unknown) => {
+          console.error('Image upload failed:', error);
+        },
+        upload: (file: File, onProgress?: (percent: number) => void) =>
+          uploadImageUrl({ file, onProgress }),
+      },
+      maxHeight: 480,
+      minHeight: 320,
+    }),
     Select: withDefaultPlaceholder(Select, 'select'),
     Space,
     Switch,

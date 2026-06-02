@@ -5,6 +5,7 @@ on:
   push:
     branches:
       - main
+      - blog-dev
       - 'releases/*'
 
 permissions:
@@ -17,14 +18,11 @@ env:
 jobs:
   test:
     name: Test
-    if: github.repository == 'vbenjs/vue-vben-admin'
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
         os:
           - ubuntu-latest
-          # - macos-latest
-          - windows-latest
     timeout-minutes: 20
     steps:
       - name: Checkout code
@@ -40,12 +38,6 @@ jobs:
       - name: Setup Node
         uses: ./.github/actions/setup-node
 
-      # - name: Check Git version
-      #   run: git --version
-
-      # - name: Setup mock Git user
-      #   run: git config --global user.email "you@example.com" && git config --global user.name "Your Name"
-
       - name: Vitest tests
         run: pnpm run test:unit
 
@@ -56,14 +48,11 @@ jobs:
 
   lint:
     name: Lint
-    if: github.repository == 'vbenjs/vue-vben-admin'
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
         os:
           - ubuntu-latest
-          # - macos-latest
-          - windows-latest
 
     steps:
       - name: Checkout code
@@ -79,15 +68,12 @@ jobs:
 
   check:
     name: Check
-    if: github.repository == 'vbenjs/vue-vben-admin'
     runs-on: ${{ matrix.os }}
     timeout-minutes: 20
     strategy:
       matrix:
         os:
           - ubuntu-latest
-          # - macos-latest
-          - windows-latest
     steps:
       - name: Checkout code
         uses: actions/checkout@v6
@@ -109,7 +95,6 @@ jobs:
 
   ci-ok:
     name: CI OK
-    if: github.repository == 'vbenjs/vue-vben-admin'
     runs-on: ubuntu-latest
     needs: [test, check, lint]
     env:

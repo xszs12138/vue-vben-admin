@@ -70,8 +70,31 @@ setupVbenVxeTable({
   useVbenForm,
 });
 
+type VxeGridOptions<T extends Record<string, any>> = Parameters<
+  typeof useGrid<T, ComponentType, ComponentPropsMap>
+>[0];
+
+/** 表格搜索区：禁止输入即搜，须点查询或回车 */
+function withGridSearchFormDefaults<T extends Record<string, any>>(
+  options: VxeGridOptions<T>,
+): VxeGridOptions<T> {
+  if (!options.formOptions) {
+    return options;
+  }
+  return {
+    ...options,
+    formOptions: {
+      ...options.formOptions,
+      submitOnChange: false,
+    },
+  };
+}
+
 export const useVbenVxeGrid = <T extends Record<string, any>>(
-  ...rest: Parameters<typeof useGrid<T, ComponentType, ComponentPropsMap>>
-) => useGrid<T, ComponentType, ComponentPropsMap>(...rest);
+  options: VxeGridOptions<T>,
+) =>
+  useGrid<T, ComponentType, ComponentPropsMap>(
+    withGridSearchFormDefaults(options),
+  );
 
 export type * from '@vben/plugins/vxe-table';

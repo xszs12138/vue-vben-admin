@@ -22,7 +22,7 @@ const defaultPreferences: Preferences = {
     enableCheckUpdates: true,
     enableCopyPreferences: true,
     enablePreferences: true,
-    enableRefreshToken: false,
+    enableRefreshToken: true,
     enableStickyPreferencesNavigationBar: true,
     isMobile: false,
     layout: 'sidebar-nav',
@@ -66,8 +66,8 @@ const defaultPreferences: Preferences = {
 
   logo: {
     enable: true,
-    fit: 'contain',
-    source: 'https://unpkg.com/@vbenjs/static-source@0.1.7/source/logo-v1.webp',
+    fit: 'cover',
+    source: 'https://bu.dusays.com/2026/05/25/6a13fbd08069b.png',
   },
   navigation: {
     accordion: true,
