@@ -45,7 +45,8 @@ jobs:
           tags: |
             type=ref,event=branch
             type=sha,prefix=,format=short
-            type=raw,value=latest,enable=${{ github.ref == 'refs/heads/main' }}
+            # main 与 blog-dev 均更新 latest，便于 ECS deploy 默认拉取
+            type=raw,value=latest,enable=${{ github.ref == 'refs/heads/main' || github.ref == 'refs/heads/blog-dev' }}
 
       - name: Build and push image
         uses: docker/build-push-action@v6
