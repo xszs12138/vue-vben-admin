@@ -17,6 +17,7 @@ const emit = defineEmits<{
 }>();
 
 const postId = ref<number>();
+const savedContentType = ref<'html' | 'markdown'>('markdown');
 const getTitle = computed(() => (postId.value ? '编辑文章' : '新建文章'));
 
 const [Form, formApi] = useVbenForm({
@@ -38,7 +39,7 @@ const [Modal, modalApi] = useVbenModal({
       const payload: PostsApi.SaveParams = {
         ...values,
         categoryId: values.categoryId ?? null,
-        contentType: 'html',
+        contentType: savedContentType.value,
         status: values.status || 'draft',
         tagIds: values.tagIds ?? [],
       };
@@ -60,6 +61,7 @@ const [Modal, modalApi] = useVbenModal({
   async onOpenChange(isOpen) {
     if (!isOpen) {
       postId.value = undefined;
+      savedContentType.value = 'markdown';
       formApi.resetForm();
       return;
     }
@@ -70,6 +72,8 @@ const [Modal, modalApi] = useVbenModal({
       modalApi.lock(true);
       try {
         const detail = await getPostApi(data.id);
+        savedContentType.value =
+          detail.contentType === 'html' ? 'html' : 'markdown';
         formApi.setValues({
           title: detail.title,
           slug: detail.slug,
@@ -92,12 +96,13 @@ const [Modal, modalApi] = useVbenModal({
       status: 'draft',
       tagIds: [],
     });
+    savedContentType.value = 'markdown';
   },
 });
 </script>
 
 <template>
-  <Modal :title="getTitle" class="w-[900px]">
+  <Modal :title="getTitle" class="w-[min(96vw,1100px)]">
     <Form class="mx-4" />
   </Modal>
 </template>

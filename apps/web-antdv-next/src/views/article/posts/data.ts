@@ -140,16 +140,14 @@ export function useFormSchema(): VbenFormSchema[] {
       label: '标签',
     },
     {
-      component: 'RichEditor',
+      component: 'MarkdownEditor',
+      componentProps: {
+        height: 480,
+      },
       fieldName: 'content',
       formItemClass: 'col-span-full',
       label: '正文',
-      rules: z
-        .string()
-        .refine(
-          (value) => value.replaceAll(/<[^>]+>/g, '').trim().length > 0,
-          '请输入正文',
-        ),
+      rules: z.string().trim().min(1, '请输入正文'),
     },
     {
       component: 'Select',

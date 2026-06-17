@@ -67,6 +67,7 @@ import { message, Modal, notification } from 'antdv-next';
 
 import { uploadImageUrl } from '#/api/image-bed';
 import ImageUpload from '#/components/ImageUpload.vue';
+import MarkdownEditor from '#/components/MarkdownEditor.vue';
 
 type AdapterUploadProps = UploadProps & {
   aspectRatio?: string;
@@ -80,6 +81,11 @@ export type ImageUploadProps = {
   accept?: string;
   disabled?: boolean;
   maxSize?: number;
+};
+
+export type MarkdownEditorProps = {
+  height?: number;
+  placeholder?: string;
 };
 
 const AutoComplete = defineAsyncComponent(
@@ -554,6 +560,7 @@ export type ComponentType =
   | 'Input'
   | 'InputNumber'
   | 'InputPassword'
+  | 'MarkdownEditor'
   | 'Mentions'
   | 'PrimaryButton'
   | 'Radio'
@@ -590,6 +597,7 @@ export interface ComponentPropsMap {
   InputNumber: InputNumberProps;
   InputPassword: InputProps;
   Mentions: MentionsProps;
+  MarkdownEditor: MarkdownEditorProps;
   PrimaryButton: ButtonProps;
   Radio: RadioProps;
   RadioGroup: RadioGroupProps;
@@ -654,6 +662,9 @@ async function initComponentAdapter() {
     }),
     InputPassword: withDefaultPlaceholder(InputPassword, 'input'),
     Mentions: withDefaultPlaceholder(Mentions, 'input'),
+    MarkdownEditor: withDefaultPlaceholder(MarkdownEditor, 'input', {
+      modelPropName: 'modelValue',
+    }),
     // 自定义主要按钮
     PrimaryButton: (props, { attrs, slots }) => {
       return h(Button, { ...props, attrs, type: 'primary' }, slots);

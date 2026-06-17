@@ -6,9 +6,11 @@ import { ref, watch } from 'vue';
 import { IconifyIcon } from '@vben/icons';
 import { $t } from '@vben/locales';
 
-import { message, Upload } from 'antdv-next';
+import { Button, message, Space, Upload } from 'antdv-next';
 
 import { uploadImageUrl } from '#/api/image-bed';
+
+import ImagePickerModal from './ImagePickerModal.vue';
 
 const props = withDefaults(
   defineProps<{
@@ -25,6 +27,7 @@ const props = withDefaults(
 const value = defineModel<string>('value', { default: '' });
 
 const fileList = ref<UploadFile[]>([]);
+const pickerOpen = ref(false);
 
 function urlToUploadFile(url: string): UploadFile {
   return {
@@ -82,25 +85,48 @@ const handleChange: UploadProps['onChange'] = (info) => {
     fileList.value = [];
   }
 };
+
+function onPickerConfirm(urls: string[]) {
+  const url = urls[0];
+  if (url) {
+    value.value = url;
+    message.success('已选择封面');
+  }
+}
 </script>
 
 <template>
-  <Upload
-    v-model:file-list="fileList"
-    :accept="accept"
-    :before-upload="handleBeforeUpload"
-    :custom-request="customRequest"
-    :disabled="disabled"
-    :max-count="1"
-    list-type="picture-card"
-    @change="handleChange"
-  >
-    <div
-      v-if="fileList.length === 0"
-      class="flex flex-col items-center justify-center text-foreground/60"
+  <div class="flex flex-col gap-2">
+    <Upload
+      v-model:file-list="fileList"
+      :accept="accept"
+      :before-upload="handleBeforeUpload"
+      :custom-request="customRequest"
+      :disabled="disabled"
+      :max-count="1"
+      list-type="picture-card"
+      @change="handleChange"
     >
-      <IconifyIcon class="mb-1 size-6" icon="ant-design:plus-outlined" />
-      <span class="text-xs">上传封面</span>
-    </div>
-  </Upload>
+      <div
+        v-if="fileList.length === 0"
+        class="flex flex-col items-center justify-center text-foreground/60"
+      >
+        <IconifyIcon class="mb-1 size-6" icon="ant-design:plus-outlined" />
+        <span class="text-xs">上传封面</span>
+      </div>
+    </Upload>
+
+    <Space>
+      <Button :disabled="disabled" size="small" @click="pickerOpen = true">
+        从图库选择
+      </Button>
+    </Space>
+
+    <ImagePickerModal
+      v-model:open="pickerOpen"
+      :max-size="maxSize"
+      title="选择封面"
+      @confirm="onPickerConfirm"
+    />
+  </div>
 </template>
